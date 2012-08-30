@@ -12,19 +12,27 @@ clc;clear all;close all;
 
 load ../data/sig_slice.mat;
 
-figure();
-for i = 1:sig_slice.num
-    subplot(2,2,1);hold on;
-        plot(sig_slice.data{i}.c,sig_slice.data{i}.coef(1),'-ob');
-        title('Offset');xlabel('Concentration');ylim([-100 100]);
-    subplot(2,2,2);hold on;
-        plot(sig_slice.data{i}.c,sig_slice.data{i}.coef(2),'-og');
-        title('Height');xlabel('Concentration');ylim([-1000 1000]);
-    subplot(2,2,3);hold on;
-        plot(sig_slice.data{i}.c,sig_slice.data{i}.coef(3),'-or');
-        title('Center');xlabel('Concentration');ylim([-1000 1000]);
-    subplot(2,2,4);hold on;
-        plot(sig_slice.data{i}.c,sig_slice.data{i}.coef(4),'-om');
-        title('Slope');xlabel('Concentration');ylim([-1000 1000]);
-end
+f = @(x) x;
 
+concen = cellfun(@(x) x.c, sig_slice.data);
+offset = cellfun(@(x) x.coef(1), sig_slice.data);
+height = cellfun(@(x) x.coef(2), sig_slice.data);
+center = cellfun(@(x) x.coef(3), sig_slice.data);
+width  = cellfun(@(x) x.coef(4), sig_slice.data);
+
+figure();
+subplot(2,3,1);
+    plot(concen,offset,'ob');grid on;
+    title('Offset');xlabel('Concentration');ylim([-50 100]);
+subplot(2,3,2);
+    plot(concen,height,'og');grid on;
+    title('Height');xlabel('Concentration');ylim([0 400]);
+subplot(2,3,4);
+    plot(concen,center,'or');grid on;
+    title('Center');xlabel('Concentration');ylim([0 500]);
+subplot(2,3,5);
+    plot(concen,width,'om');grid on;
+    title('Width');xlabel('Concentration');ylim([0 400]);
+subplot(2,3,[3 6]);
+    plot(concen,height./width,'ok');grid on;
+    title('Gain');xlabel('Concentration');ylim([0 2.5]);
